@@ -2,14 +2,14 @@
 
 Part of the Cook Consulting Services, LLC brand family. Files: `tokens.json` (source of truth), `tokens.css` (CSS variables + font faces), the font files, logos, floral elements and product images (all in the top level).
 
-Jules Studio is Julie's handmade Etsy shop (JulesStudioTX, Dallas, Texas): custom floral letters and monograms built from silk blooms. It is the CCS brand book at its softest — the same linen ground, black line florals, League Spartan / Quicksand pairing and a thread of peacock blue — with one thing of its own: **soft watercolor washes of lavender and sky behind the line drawings**. Minimal first; the color is a pop, never a fill.
+Jules Studio is Julie's handmade Etsy shop (JulesStudioTX, Fort Worth, Texas): custom floral letters and monograms built from silk blooms. It is the CCS brand book at its softest — the same linen ground, black line florals, League Spartan / Quicksand pairing and a thread of peacock blue — with one thing of its own: **soft watercolor washes of lavender and sky behind the line drawings**. Minimal first; the color is a pop, never a fill.
 
 ## Content fundamentals
 
 - Voice: warm, personal, crafted. First person is fine — "I build every letter by hand." Speak to the gift-giver: "for her nursery", "for graduation day", "for the bride-to-be".
 - Listing titles: product, letter or word, colors, occasion — "Floral Letter J — Lavender & White Silk Peonies — Nursery Decor".
 - Set display lines (`display`, `h1`) in lowercase League Spartan, like CCS. Use `script` only for a signature word ("jules studio", "thank you", a name on a gift tag), in `signature`.
-- Use tracked uppercase `label` for small banners: HANDCRAFTED BY · MADE TO ORDER · DALLAS, TX.
+- Use tracked uppercase `label` for small banners: HANDCRAFTED BY · MADE TO ORDER · FORT WORTH, TX.
 - Emoji: none in brand graphics; at most one in a social caption.
 
 ## Visual foundations
