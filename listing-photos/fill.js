@@ -8,7 +8,7 @@ window.__fill = async function(key){
  if(have===0){
   const dt=new DataTransfer();
   for(const [i,u] of d.photos.entries()){const b=await (await fetch(u)).blob(); dt.items.add(new File([b],d.sku.toLowerCase()+'-'+(i+1)+'.jpg',{type:'image/jpeg'}));}
-  const inp=document.querySelector('input[type=file][name=listing-media-upload]'); inp.files=dt.files; inp.dispatchEvent(new Event('change',{bubbles:true}));
+  const inp=(document.querySelector('input[type=file][name=listing-media-upload]')||document.querySelector('input[type=file]')); inp.files=dt.files; inp.dispatchEvent(new Event('change',{bubbles:true}));
   log.push('photos '+d.photos.length); await sleep(6000);
  }
  // category
