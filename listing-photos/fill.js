@@ -77,6 +77,7 @@ window.__pub=async()=>{ const sleep=ms=>new Promise(r=>setTimeout(r,ms)); await 
  const ap=[...pd.querySelectorAll('button')].filter(b=>b.innerText.trim()==='Apply').find(b=>{let p=b;for(let i=0;i<4;i++){p=p.parentElement; if(/Ready to ship/.test(p.innerText)&&/1-2 days/.test(p.innerText)&&!/weeks|5-7/.test(p.innerText))return true;}return false;});
  ap.click(); await sleep(2000);
  const pb=[...document.querySelectorAll('button')].find(b=>b.innerText.trim()==='Publish with changes')||[...document.querySelectorAll('button')].find(b=>b.innerText.trim()==='Publish'); const lbl=pb.innerText.trim(); pb.click(); await sleep(3500);
+ const sk=[...document.querySelectorAll('[role=dialog],[aria-modal=true],.wt-overlay')].find(e=>e.getBoundingClientRect().height>0&&e.innerText.includes('Skip and continue')); if(sk){[...sk.querySelectorAll('button')].find(b=>b.innerText.trim()==='Skip and continue').click(); await sleep(3000);}
  const d=[...document.querySelectorAll('[role=dialog],[aria-modal=true],.wt-overlay')].find(e=>e.getBoundingClientRect().height>0&&e.innerText.includes('publish a new listing'));
  if(d){[...d.querySelectorAll('button')].find(b=>b.innerText.trim()==='Publish').click(); await sleep(5000);}
  return JSON.stringify({lbl, dialog:!!d, url:location.href.slice(-30)}); };
