@@ -1,5 +1,5 @@
 window.__fill = async function(key){
- const RAWJ='https://raw.githubusercontent.com/JulieCookTCU27/jules-studio-design-system/ba761c33246f0d4e1109a8441daa36455c8b766a/listing-photos/listings.json';
+ const RAWJ=window.__RAWJ||'https://raw.githubusercontent.com/JulieCookTCU27/jules-studio-design-system/ba761c33246f0d4e1109a8441daa36455c8b766a/listing-photos/listings.json';
  const L=await (await fetch(RAWJ)).json(); const d=L.find(x=>x.key===key); const log=[];
  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  const setVal=(el,v)=>{const p=el.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:el.tagName==='SELECT'?HTMLSelectElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(p,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));el.dispatchEvent(new Event('blur',{bubbles:true}));};
@@ -37,3 +37,37 @@ window.__fill = async function(key){
  return log.join(', ');
 };
 'ok'
+window.__fill2 = async function(key){
+ const L=await (await fetch(window.__RAWJ)).json(); const d=L.find(x=>x.key===key); const log=[];
+ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+ const dlg=txt=>[...document.querySelectorAll('[role=dialog],[aria-modal=true]')].filter(e=>e.innerText.includes(txt)).pop();
+ const btn=(root,txt)=>[...root.querySelectorAll('button')].find(b=>b.innerText.trim()===txt);
+ const setIn=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));el.dispatchEvent(new Event('blur',{bubbles:true}));};
+ // shipping
+ if(!/Shipping option \n\nFree US shipping/.test(document.body.innerText)){ const b=btn(document,'Select profile')||btn(document,'Change'); b.click(); await sleep(2000); const dd=dlg('Shipping options'); const ap=[...dd.querySelectorAll('button')].filter(b=>b.innerText.trim()==='Apply').find(b=>{let p=b;for(let i=0;i<4;i++){p=p.parentElement;if(p.innerText.includes('Free US shipping')&&!p.innerText.includes('NA Shipping'))return true;}return false;}); ap.click(); await sleep(2000);} 
+ log.push('ship:'+/Free US shipping/.test(document.body.innerText.match(/Shipping option[\s\S]{0,40}/)[0]));
+ // returns
+ if(!/Returns and exchanges \n\nNo returns/.test(document.body.innerText)){ btn(document,'Change policy').click(); await sleep(2000); const dd=dlg('Return and exchange'); const ap=[...dd.querySelectorAll('button')].filter(b=>b.innerText.trim()==='Apply this policy').find(b=>{let p=b;for(let i=0;i<5;i++){p=p.parentElement; if(p.innerText.includes('No returns or exchanges')&&!p.innerText.includes('Exchanges only')) return true;} return false;}); ap.click(); await sleep(1500);} 
+ log.push('ret:'+/Returns and exchanges \n\nNo returns/.test(document.body.innerText));
+ // variations
+ if(d.display){
+  btn(document,'Add variation').click(); await sleep(1500);
+  btn(dlg('Add up to 3 variations'),'Create your own').click(); await sleep(1200);
+  let cv=dlg('Custom variation'); setIn(cv.querySelector('#le-unstructured-variation-name-input'),'Display'); await sleep(300);
+  for(const [o] of d.display){const i=dlg('Custom variation').querySelector('input[placeholder^="Enter an option"]'); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(i,o); i.dispatchEvent(new Event('input',{bubbles:true})); await sleep(250); i.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',code:'Enter',keyCode:13,bubbles:true})); await sleep(500);} 
+  btn(dlg('Custom variation'),'Done').click(); await sleep(2000);
+  const mv=dlg('Manage variations'); const lab=[...mv.querySelectorAll('*')].find(e=>e.childElementCount<=2&&e.innerText?.trim().startsWith('Prices')&&e.innerText.includes('vary')&&e.tagName!=='INPUT');
+  const sw=[...mv.querySelectorAll('input[type=checkbox]')].find(c=>mv.querySelector('label[for="'+c.id+'"]')?.innerText.includes('Prices vary'));
+  (mv.querySelector('label[for="'+sw.id+'"]')).click(); await sleep(800);
+  log.push('pv:'+sw.checked);
+  btn(dlg('Manage variations'),'Apply').click(); await sleep(2000);
+  d.display.forEach(([o,p],i)=>{const el=document.querySelector(`input[name="variations.tables.0.rows.${i}.controls.price"]`); if(el) setIn(el,String(p));});
+  await sleep(500); log.push('prices:'+d.display.map((x,i)=>document.querySelector(`input[name="variations.tables.0.rows.${i}.controls.price"]`)?.value).join('/'));
+ }
+ // section
+ const s=document.getElementById('shop-section-select'); let o=[...s.options].find(o=>o.text===d.section);
+ if(!o){Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(s,'1'); s.dispatchEvent(new Event('change',{bubbles:true})); await sleep(1500); const nd=dlg('New Section'); setIn(nd.querySelector('#section'),d.section); await sleep(300); btn(nd,'Save').click(); await sleep(2500);} else {Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(s,o.value); s.dispatchEvent(new Event('change',{bubbles:true}));}
+ log.push('section:'+s.options[s.selectedIndex].text);
+ const f=document.getElementById('listing-featured-rank-checkbox'); if(d.feature&&!f.checked){(document.querySelector('label[for="listing-featured-rank-checkbox"]')||f).click(); await sleep(400);} log.push('feat:'+f.checked);
+ return log.join(', ');
+};
